@@ -166,8 +166,8 @@
         .product-image {
             width: 100%;
             height: 300px;
-            object-fit: cover;
-            background: #000;
+            object-fit: contain;
+            background: #fff;
         }
 
         .discount-badge {
@@ -736,9 +736,20 @@
                         <label class="option-label">المقاس:</label>
                         <div class="option-buttons" id="size-options"></div>
                     </div>
-                    <div class="options-container">
-                        <label class="option-label">اللون:</label>
+                    <div class="options-container" id="color-container">
+                        <label class="option-label" id="color-label">اللون:</label>
                         <div class="option-buttons" id="color-options"></div>
+                    </div>
+                    <div class="options-container" id="quantity-container">
+                        <label class="option-label">الكمية:</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <button class="option-button" onclick="decreaseQuantity()" style="font-size: 24px; min-width: 50px;">-</button>
+                            <input type="number" id="quantity-input" value="1" min="1" max="99" 
+                                   style="width: 80px; text-align: center; font-size: 20px; font-weight: bold; 
+                                          background: rgba(218, 165, 32, 0.1); border: 2px solid rgba(218, 165, 32, 0.5);
+                                          color: #FFD700; padding: 10px; border-radius: 10px;" readonly>
+                            <button class="option-button" onclick="increaseQuantity()" style="font-size: 24px; min-width: 50px;">+</button>
+                        </div>
                     </div>
                     <div class="action-buttons">
                         <button class="btn btn-primary" onclick="addToCart()">🛒 إضافة للسلة</button>
@@ -852,100 +863,247 @@
     <script>
         const products = [
             {
-                id: 1,
-                name: 'فستان فاخر ذهبي',
-                description: 'فستان أنيق بتصميم عصري وألوان رائعة',
-                price: 1200,
-                oldPrice: 1800,
-                discount: 33,
-                image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=500',
+                id: 3,
+                name: 'حظاظة ولادي',
+                description: 'حظاظة مريحة وآمنة للأطفال - هدية مجانية مع طلبك',
+                price: 0,
+                oldPrice: 5,
+                discount: 100,
+                image: 'products/3.jpg',
                 images: [
-                    'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=500',
-                    'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500',
-                    'https://images.unsplash.com/photo-1583391733981-9c9e96e2e614?w=500'
+                    'products/3.jpg'
                 ],
-                sizes: ['S', 'M', 'L', 'XL'],
-                colors: ['أسود', 'ذهبي', 'فضي']
+                sizes: [],
+                colors: [],
+                isFree: true
+            },
+            {
+                id: 1,
+                name: 'برفان',
+                description: 'عطر بخامة جيدة ورائحة ثابتة ومميزة',
+                price: 25,
+                oldPrice: 40,
+                discount: 38,
+                image: 'products/1.jpg',
+                images: [
+                    'products/1.jpg'
+                ],
+                sizes: [],
+                colors: []
             },
             {
                 id: 2,
-                name: 'حقيبة يد فاخرة',
-                description: 'حقيبة يد عصرية بجودة عالية',
-                price: 800,
-                oldPrice: 1200,
-                discount: 33,
-                image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500',
+                name: 'سلسلة رجالي كلاسيك',
+                description: 'سلسلة رجالية أنيقة بتصميم عصري - إكسسوار مثالي للإطلالة المميزة',
+                price: 25,
+                oldPrice: 50,
+                discount: 50,
+                image: 'products/2.jpg',
                 images: [
-                    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500',
-                    'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=500',
-                    'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500'
+                    'products/2.jpg'
                 ],
-                sizes: ['صغير', 'متوسط', 'كبير'],
-                colors: ['بني', 'أسود', 'بيج']
-            },
-            {
-                id: 3,
-                name: 'ساعة يد رجالية',
-                description: 'ساعة كلاسيكية فاخرة بتصميم أنيق',
-                price: 2500,
-                oldPrice: 4000,
-                discount: 37,
-                image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
-                images: [
-                    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
-                    'https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=500',
-                    'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500'
-                ],
-                sizes: ['قياس واحد'],
-                colors: ['ذهبي', 'فضي', 'أسود']
+                sizes: [],
+                colors: []
             },
             {
                 id: 4,
-                name: 'حذاء رياضي عصري',
-                description: 'حذاء رياضي مريح بتصميم حديث',
-                price: 600,
-                oldPrice: 900,
+                name: 'مرآة صغيرة بناتي',
+                description: 'مرآة صغيرة أنيقة ومحمولة - عملية ومثالية للبنات',
+                price: 20,
+                oldPrice: 30,
                 discount: 33,
-                image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500',
+                image: 'products/4.jpg',
                 images: [
-                    'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500',
-                    'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=500',
-                    'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=500'
+                    'products/4.jpg'
                 ],
-                sizes: ['39', '40', '41', '42', '43'],
-                colors: ['أبيض', 'أسود', 'أحمر']
+                sizes: [],
+                colors: []
             },
             {
                 id: 5,
-                name: 'نظارة شمسية فاخرة',
-                description: 'نظارة شمسية عصرية بحماية UV',
-                price: 450,
-                oldPrice: 750,
-                discount: 40,
-                image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500',
+                name: 'حظاظة الأهلي',
+                description: 'حظاظة بشعار النادي الأهلي - هدية رائعة لمحبي القلعة الحمراء',
+                price: 5,
+                oldPrice: 15,
+                discount: 67,
+                image: 'products/5.jpg',
                 images: [
-                    'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500',
-                    'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500',
-                    'https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=500'
+                    'products/5.jpg'
                 ],
-                sizes: ['قياس واحد'],
-                colors: ['أسود', 'بني', 'ذهبي']
+                sizes: [],
+                colors: []
             },
             {
                 id: 6,
-                name: 'سوار ذهبي فاخر',
-                description: 'سوار أنيق مطلي بالذهب عيار 18',
-                price: 1500,
-                oldPrice: 2200,
-                discount: 32,
-                image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500',
+                name: 'سلسلة رجالي فاخرة',
+                description: 'سلسلة رجالية بتصميم جذاب ومميز - قطعة أنيقة تناسب جميع المناسبات',
+                price: 25,
+                oldPrice: 50,
+                discount: 50,
+                image: 'products/6.jpg',
                 images: [
-                    'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500',
-                    'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500',
-                    'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=500'
+                    'products/6.jpg'
                 ],
-                sizes: ['صغير', 'متوسط', 'كبير'],
-                colors: ['ذهبي', 'ذهبي وردي', 'ذهبي أبيض']
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 13,
+                name: 'سلسلة بناتي',
+                description: 'سلسلة بسيطة مناسبة للبنات',
+                price: 25,
+                oldPrice: 50,
+                discount: 50,
+                image: 'products/13.jpg',
+                images: [
+                    'products/13.jpg'
+                ],
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 15,
+                name: 'سلسلة بناتي',
+                description: 'سلسلة أنيقة للبنات',
+                price: 25,
+                oldPrice: 50,
+                discount: 50,
+                image: 'products/15.jpg',
+                images: [
+                    'products/15.jpg'
+                ],
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 17,
+                name: 'سلسلة رجالي عصرية',
+                description: 'سلسلة رجالية بتصميم حديث وأنيق - تضيف لمسة من الفخامة لإطلالتك',
+                price: 25,
+                oldPrice: 50,
+                discount: 50,
+                image: 'products/17.jpg',
+                images: [
+                    'products/17.jpg'
+                ],
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 18,
+                name: 'سلسلة فلسطين',
+                description: 'سلسلة مميزة برمز فلسطين - هدية معبرة عن الحب والانتماء',
+                price: 25,
+                oldPrice: 50,
+                discount: 50,
+                image: 'products/18.jpg',
+                images: [
+                    'products/18.jpg'
+                ],
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 7,
+                name: 'حلق بناتي',
+                description: 'حلق أنيق بتصميم جميل وراقي - إكسسوار رقيق يناسب جميع المناسبات',
+                price: 9,
+                oldPrice: 19,
+                discount: 53,
+                image: 'products/7.jpg',
+                images: [
+                    'products/7.jpg'
+                ],
+                sizes: [],
+                colors: [],
+                noQuantity: true
+            },
+            {
+                id: 8,
+                name: 'برفان CPC',
+                description: 'عطر CPC بخامة فاخرة ورائحة مميزة - اختر النوع المناسب لك',
+                price: 150,
+                oldPrice: 150,
+                discount: 0,
+                image: 'products/8.jpg',
+                images: [
+                    'products/8.jpg'
+                ],
+                sizes: [],
+                colors: ['رجالي', 'حريمي'],
+                noQuantity: true
+            },
+            {
+                id: 9,
+                name: 'دبلة باتمان رجالي',
+                description: 'دبلة رجالية بتصميم باتمان المميز - قطعة فريدة لعشاق الشخصية الأسطورية',
+                price: 10,
+                oldPrice: 29,
+                discount: 66,
+                image: 'products/9.jpg',
+                images: [
+                    'products/9.jpg'
+                ],
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 11,
+                name: 'حظاظة برشلونة',
+                description: 'حظاظة بشعار نادي برشلونة - مريحة وآمنة للأطفال - هدية رائعة لمحبي البارسا',
+                price: 10,
+                oldPrice: 10,
+                discount: 0,
+                image: 'products/11.jpg',
+                images: [
+                    'products/11.jpg'
+                ],
+                sizes: [],
+                colors: []
+            },
+            {
+                id: 12,
+                name: 'برفان خامة جيدة',
+                description: 'عطر بخامة ممتازة ورائحة ثابتة - عطر مميز بسعر مناسب',
+                price: 70,
+                oldPrice: 70,
+                discount: 0,
+                image: 'products/12.jpg',
+                images: [
+                    'products/12.jpg'
+                ],
+                sizes: [],
+                colors: ['Sexy 212', 'Si'],
+                noQuantity: true
+            },
+            {
+                id: 14,
+                name: 'الصبارة الراقصة',
+                description: 'صبارة تفاعلية ترقص وتغني - متوفر معها وصلة شاحن وطاقية - تحتوي على 100 أغنية مختلفة - هدية مثالية للأطفال',
+                price: 200,
+                oldPrice: 400,
+                discount: 50,
+                image: 'products/14.jpg',
+                images: [
+                    'products/14.jpg'
+                ],
+                sizes: [],
+                colors: [],
+                noQuantity: true
+            },
+            {
+                id: 16,
+                name: 'انسيال بناتي',
+                description: 'انسيال أنيق بتصميم جميل - إكسسوار عصري للبنات',
+                price: 25,
+                oldPrice: 40,
+                discount: 38,
+                image: 'products/16.jpg',
+                images: [
+                    'products/16.jpg'
+                ],
+                sizes: [],
+                colors: []
             }
         ];
 
@@ -1084,7 +1242,7 @@
                         <div class="product-description">${product.description}</div>
                         <div class="price-container">
                             <span class="price-old">${product.oldPrice} جنيه</span>
-                            <span class="price-new">${product.price} جنيه</span>
+                            <span class="price-new">${product.isFree ? 'مجاناً 🎁' : product.price + ' جنيه'}</span>
                         </div>
                     </div>
                 </div>
@@ -1098,8 +1256,17 @@
             document.getElementById('modal-product-name').textContent = currentProduct.name;
             document.getElementById('modal-discount').textContent = `${currentProduct.discount}%-`;
             document.getElementById('modal-price-old').textContent = `${currentProduct.oldPrice} جنيه`;
-            document.getElementById('modal-price-new').textContent = `${currentProduct.price} جنيه`;
+            document.getElementById('modal-price-new').textContent = currentProduct.isFree ? 'مجاناً 🎁' : `${currentProduct.price} جنيه`;
             document.getElementById('modal-main-image').src = currentProduct.images[0];
+
+            // إخفاء أو إظهار قسم الكمية حسب المنتج
+            const quantityContainer = document.getElementById('quantity-container');
+            if (currentProduct.isFree || currentProduct.noQuantity) {
+                quantityContainer.style.display = 'none';
+            } else {
+                quantityContainer.style.display = 'block';
+                document.getElementById('quantity-input').value = 1;
+            }
 
             const thumbnailContainer = document.getElementById('thumbnail-container');
             thumbnailContainer.innerHTML = currentProduct.images.map((img, index) => 
@@ -1107,17 +1274,37 @@
             ).join('');
 
             const sizeOptions = document.getElementById('size-options');
-            sizeOptions.innerHTML = currentProduct.sizes.map(size => 
-                `<button class="option-button" onclick="selectSize('${size}', this)">${size}</button>`
-            ).join('');
+            if (currentProduct.sizes && currentProduct.sizes.length > 0) {
+                sizeOptions.innerHTML = currentProduct.sizes.map(size => 
+                    `<button class="option-button" onclick="selectSize('${size}', this)">${size}</button>`
+                ).join('');
+                sizeOptions.parentElement.style.display = 'block';
+            } else {
+                sizeOptions.innerHTML = '';
+                sizeOptions.parentElement.style.display = 'none';
+                selectedSize = 'لا يوجد';
+            }
 
             const colorOptions = document.getElementById('color-options');
-            colorOptions.innerHTML = currentProduct.colors.map(color => 
-                `<button class="option-button" onclick="selectColor('${color}', this)">${color}</button>`
-            ).join('');
+            const colorLabel = document.getElementById('color-label');
+            if (currentProduct.colors && currentProduct.colors.length > 0) {
+                // تغيير التسمية إلى "النوع" للعطور (المنتجات: 1, 8, 12)
+                if (currentProduct.id === 1 || currentProduct.id === 8 || currentProduct.id === 12) {
+                    colorLabel.textContent = 'النوع:';
+                } else {
+                    colorLabel.textContent = 'اللون:';
+                }
+                colorOptions.innerHTML = currentProduct.colors.map(color => 
+                    `<button class="option-button" onclick="selectColor('${color}', this)">${color}</button>`
+                ).join('');
+                colorOptions.parentElement.style.display = 'block';
+                selectedColor = null;
+            } else {
+                colorOptions.innerHTML = '';
+                colorOptions.parentElement.style.display = 'none';
+                selectedColor = 'لا يوجد';
+            }
 
-            selectedSize = null;
-            selectedColor = null;
             modal.style.display = 'block';
         }
 
@@ -1139,6 +1326,22 @@
             element.classList.add('active');
         }
 
+        function increaseQuantity() {
+            const input = document.getElementById('quantity-input');
+            const currentValue = parseInt(input.value);
+            if (currentValue < 99) {
+                input.value = currentValue + 1;
+            }
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('quantity-input');
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        }
+
         function toggleMenu() {
             const menu = document.getElementById('menu-dropdown');
             menu.classList.toggle('show');
@@ -1153,10 +1356,12 @@
         }
 
         function addToCart() {
-            if (!selectedSize || !selectedColor) {
+            if ((!selectedSize || !selectedColor) && selectedSize !== 'لا يوجد' && selectedColor !== 'لا يوجد') {
                 alert('⚠️ الرجاء اختيار المقاس واللون');
                 return;
             }
+
+            const quantity = (currentProduct.isFree || currentProduct.noQuantity) ? 1 : parseInt(document.getElementById('quantity-input').value);
 
             const existingItem = cart.find(item => 
                 item.id === currentProduct.id && 
@@ -1165,14 +1370,8 @@
             );
 
             if (existingItem) {
-                if (confirm('⚠️ هذا المنتج موجود بالفعل في السلة. هل تريد إزالته؟')) {
-                    cart = cart.filter(item => 
-                        !(item.id === currentProduct.id && 
-                          item.size === selectedSize && 
-                          item.color === selectedColor)
-                    );
-                    alert('✅ تم إزالة المنتج من السلة');
-                }
+                existingItem.quantity = (existingItem.quantity || 1) + quantity;
+                alert(`✅ تم تحديث الكمية! العدد الجديد: ${existingItem.quantity}`);
             } else {
                 cart.push({
                     id: currentProduct.id,
@@ -1180,7 +1379,8 @@
                     price: currentProduct.price,
                     size: selectedSize,
                     color: selectedColor,
-                    image: currentProduct.image
+                    image: currentProduct.image,
+                    quantity: quantity
                 });
                 alert('✅ تم إضافة المنتج للسلة بنجاح!');
             }
@@ -1190,7 +1390,7 @@
         }
 
         function orderNow() {
-            if (!selectedSize || !selectedColor) {
+            if ((!selectedSize || !selectedColor) && selectedSize !== 'لا يوجد' && selectedColor !== 'لا يوجد') {
                 alert('⚠️ الرجاء اختيار المقاس واللون');
                 return;
             }
@@ -1209,16 +1409,21 @@
             if (cart.length === 0) {
                 cartItems.innerHTML = '<div class="empty-message">🛒 السلة فارغة</div>';
             } else {
-                cartItems.innerHTML = cart.map((item, index) => `
+                cartItems.innerHTML = cart.map((item, index) => {
+                    const quantity = item.quantity || 1;
+                    const totalPrice = item.price * quantity;
+                    const priceDisplay = item.price === 0 ? 'مجاناً 🎁' : `${totalPrice} جنيه`;
+                    return `
                     <div class="cart-item">
                         <div class="cart-item-info">
                             <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-details">المقاس: ${item.size} | اللون: ${item.color}</div>
+                            <div class="cart-item-details">المقاس: ${item.size} | اللون: ${item.color}${quantity > 1 ? ` | الكمية: ${quantity}` : ''}</div>
                         </div>
-                        <div class="cart-item-price">${item.price} جنيه</div>
+                        <div class="cart-item-price">${priceDisplay}</div>
                         <button class="remove-item" onclick="removeFromCart(${index})">🗑️</button>
                     </div>
-                `).join('');
+                `;
+                }).join('');
             }
 
             document.getElementById('cart-modal').style.display = 'block';
@@ -1285,8 +1490,8 @@
 
             const shippingCost = (governorate === 'الدقهلية' || governorate === 'الجمالية') ? 19 : 99;
             const totalPrice = cart.length > 0 
-                ? cart.reduce((sum, item) => sum + item.price, 0) + shippingCost
-                : (currentProduct ? currentProduct.price + shippingCost : shippingCost);
+                ? cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0) + shippingCost
+                : (currentProduct ? (currentProduct.price * ((currentProduct.isFree || currentProduct.noQuantity) ? 1 : parseInt(document.getElementById('quantity-input').value))) + shippingCost : shippingCost);
 
             const message = `
 🌟 *طلب جديد من متجر RE* 🌟
@@ -1327,8 +1532,8 @@ ${productName}
 
             const shippingCost = (governorate === 'الدقهلية' || governorate === 'الجمالية') ? 19 : 99;
             const totalPrice = cart.length > 0 
-                ? cart.reduce((sum, item) => sum + item.price, 0) + shippingCost
-                : (currentProduct ? currentProduct.price + shippingCost : shippingCost);
+                ? cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0) + shippingCost
+                : (currentProduct ? (currentProduct.price * ((currentProduct.isFree || currentProduct.noQuantity) ? 1 : parseInt(document.getElementById('quantity-input').value))) + shippingCost : shippingCost);
 
             const receiptDiv = document.createElement('div');
             receiptDiv.style.cssText = `
